@@ -1,0 +1,227 @@
+/* Map Markers and Location Popups Styling */
+
+/* Search result marker */
+.search-result-marker {
+    background: transparent;
+    border: none;
+}
+
+.search-result-marker i {
+    font-size: 30px;
+    color: var(--primary-color);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
+}
+
+.search-result-marker i:hover {
+    color: var(--secondary-color);
+    transform: scale(1.1);
+}
+
+/* Custom point markers */
+.custom-point-marker {
+    background: transparent;
+    border: none;
+}
+
+.custom-point-marker i {
+    font-size: 24px;
+    color: var(--success-color);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Participant location markers */
+.participant-marker {
+    background: transparent;
+    border: none;
+}
+
+.participant-marker i {
+    font-size: 24px;
+    color: var(--warning-color);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Venue markers */
+.venue-marker {
+    background: transparent;
+    border: none;
+}
+
+.venue-marker i {
+    font-size: 28px;
+    color: var(--secondary-color);
+    text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+/* Selected venue marker */
+.selected-venue-marker i {
+    color: #FF9800;
+    transform: scale(1.2);
+}
+
+/* Location popup styling */
+.location-popup {
+    padding: 5px;
+    min-width: 200px;
+}
+
+.location-popup h5 {
+    margin: 0 0 8px 0;
+    color: var(--primary-color);
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.location-popup p {
+    margin: 0 0 10px 0;
+    color: var(--text-secondary);
+    font-size: 13px;
+}
+
+.popup-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.popup-btn {
+    flex: 1 0 calc(50% - 5px);
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    border: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.popup-btn:hover {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.popup-btn i {
+    margin-right: 4px;
+    font-size: 12px;
+}
+
+/* Map selection mode indicator */
+.map-selection-mode {
+    position: fixed;
+    top: 70px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
+    z-index: 1000;
+    pointer-events: none;
+    display: flex;
+    align-items: center;
+}
+
+.map-selection-mode i {
+    margin-right: 8px;
+}
+
+/* Venue card in results list */
+.venue-card {
+    background: var(--background-card);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.venue-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px var(--shadow-color);
+}
+
+.venue-card-header {
+    padding: 12px 16px;
+    background-color: var(--primary-light);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.venue-card-title {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary-color);
+}
+
+.venue-card-rating {
+    display: flex;
+    align-items: center;
+    color: var(--warning-color);
+    font-weight: 500;
+}
+
+.venue-card-rating i {
+    margin-right: 4px;
+}
+
+.venue-card-body {
+    padding: 12px 16px;
+}
+
+.venue-card-address {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.venue-card-amenities {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+}
+
+.venue-amenity-tag {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.venue-card-actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.venue-card-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.venue-card-btn:hover {
+    background-color: #1565C0;
+}
+
+.venue-card-btn.secondary {
+    background-color: var(--text-tertiary);
+}
+
+.venue-card-btn.secondary:hover {
+    background-color: var(--text-secondary);
+}

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FindMyMap - Professional Navigation</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="business-tourism-components.css">
+    <link rel="stylesheet" href="map-markers.css">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath fill='%231976D2' d='M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z'/%3E%3C/svg%3E">
+    <meta name="theme-color" content="#1976D2">
+</head>
+<body>
+    <!-- Mobile toggle button for controls panel -->
+    <div class="mobile-toggle" id="mobile-toggle">
+        <i class="fas fa-bars"></i> Menu
+    </div>
+    
+    <!-- Modern search box with autocomplete -->
+    <div class="search-container" id="search-container">
+        <div class="search-box">
+            <i class="fas fa-search search-icon"></i>
+            <input type="text" id="search-input" class="search-input" placeholder="Search locations...">
+            <button id="search-clear" class="search-clear"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="search-autocomplete" id="search-autocomplete">
+            <!-- Autocomplete results will be populated here -->
+        </div>
+    </div>
+    
+    <div class="container-fluid p-0">
+        <div class="row g-0">
+            <!-- Overlay for mobile sidebar -->
+            <div class="sidebar-overlay" id="sidebar-overlay"></div>
+            <!-- Controls panel -->
+            <div class="col-md-3 bg-light" id="controls-sidebar">
+                <div class="controls-panel">
+                    <div class="controls-header">
+                        <span><i class="fas fa-map-marked-alt"></i> FindMyMap</span>
+                        <button id="close-sidebar" class="btn-close btn-close-white d-md-none"></button>
+                    </div>
+                    <div class="controls-body">
+                        <div class="d-flex flex-wrap gap-2 mb-4">
+                            <button id="locate-btn" class="map-button">
+                                <i class="fas fa-location-arrow map-button-icon"></i> My Location
+                            </button>
+                            <button id="reset-btn" class="map-button">
+                                <i class="fas fa-redo map-button-icon"></i> Reset Map
+                            </button>
+                            <button id="layers-btn" class="map-button">
+                                <i class="fas fa-layer-group map-button-icon"></i> Map Layers
+                            </button>
+                        </div>
+                        
+                        <hr>
+                        <div id="distance-controls" class="route-section">
+                            <h5 class="mb-3"><i class="fas fa-route"></i> Plan Your Route</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Starting Point:</label>
+                                        <select id="point-a-select" class="form-select">
+                                            <option value="">Choose starting point</option>
+                                            <option value="user">My Current Location</option>
+                                            <option value="search">Search Result</option>
+                                            <option value="custom">Custom Point on Map</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label class="form-label">Destination:</label>
+                                        <select id="point-b-select" class="form-select">
+                                            <option value="">Choose destination</option>
+                                            <option value="user">My Current Location</option>
+                                            <option value="search">Search Result</option>
+                                            <option value="custom">Custom Point on Map</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-grid gap-2 mb-3 mt-3">
+                                <button id="calculate-distance-btn" class="map-button accent">
+                                    <i class="fas fa-ruler map-button-icon"></i> Calculate Distance
+                                </button>
+                                <button id="start-navigation-btn" class="map-button primary">
+                                    <i class="fas fa-directions map-button-icon"></i> Start Navigation
+                                </button>
+                            </div>
+                            <div id="distance-result" class="alert alert-info" style="display: none;"></div>
+                        </div>
+                        
+                        <div id="navigation-controls" class="navigation-section" style="display: none;">
+                            <h5 class="mb-3"><i class="fas fa-location-arrow"></i> Live Navigation</h5>
+                            <div id="navigation-info" class="mb-4 p-3 bg-light rounded"></div>
+                            <div class="d-grid gap-2">
+                                <button id="voice-guidance-btn" class="map-button primary">
+                                    <i class="fas fa-volume-up map-button-icon"></i> Mute Voice
+                                </button>
+                                <button id="stop-navigation-btn" class="map-button secondary">
+                                    <i class="fas fa-stop-circle map-button-icon"></i> Stop Navigation
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <hr>
+                        <div id="business-tourism-controls" class="business-section">
+                            <h5 class="mb-3"><i class="fas fa-building"></i> Business Meeting Finder</h5>
+                            
+                            <div class="form-group mb-4">
+                                <label class="form-label">Participant Locations:</label>
+                                <div id="participant-locations" class="mb-2">
+                                    <div class="participant-location" data-index="0">
+                                        <input type="text" class="form-control form-control-sm participant-input" placeholder="Enter location">
+                                        <button type="button" class="btn-remove" disabled><i class="fas fa-times"></i></button>
+                                    </div>
+                                </div>
+                                <button type="button" id="add-participant-btn" class="add-participant-btn">
+                                    <i class="fas fa-plus"></i> Add Participant
+                                </button>
+                            </div>
+                            
+                            <div class="meeting-preferences">
+                                <h6>Meeting Preferences</h6>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label small">Search Radius (km):</label>
+                                            <input type="number" id="search-radius" class="form-control form-control-sm" value="5" min="1" max="50">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                            <label class="form-label small">Minimum Rating:</label>
+                                            <select id="min-rating" class="form-select form-select-sm">
+                                                <option value="">Any Rating</option>
+                                                <option value="3">3+ Stars</option>
+                                                <option value="4">4+ Stars</option>
+                                                <option value="4.5">4.5+ Stars</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mb-3">
+                                    <label class="form-label small">Required Amenities:</label>
+                                    <div class="d-flex flex-wrap gap-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="WiFi" id="amenity-wifi">
+                                            <label class="form-check-label small" for="amenity-wifi">WiFi</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Projectors" id="amenity-projector">
+                                            <label class="form-check-label small" for="amenity-projector">Projector</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Catering" id="amenity-catering">
+                                            <label class="form-check-label small" for="amenity-catering">Catering</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="form-group mb-2">
+                                    <label class="form-label small">Optimize For:</label>
+                                    <select id="optimize-for" class="form-select form-select-sm">
+                                        <option value="average">Average Travel Time</option>
+                                        <option value="fairness">Fairness (Min Max Travel)</option>
+                                        <option value="total">Total Travel Time</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="d-grid gap-2 mt-4">
+                                <button id="find-venues-btn" class="map-button primary">
+                                    <i class="fas fa-search map-button-icon"></i> Find Meeting Venues
+                                </button>
+                            </div>
+                            
+                            <div id="venue-results" class="mt-4" style="display: none;">
+                                <h6><i class="fas fa-list-ul me-2"></i>Suggested Venues</h6>
+                                <div id="venue-list-container"></div>
+                            </div>
+                            
+                            <div id="venue-comparison-container" class="mt-4" style="display: none;">
+                                <h6><i class="fas fa-balance-scale me-2"></i>Venue Comparison</h6>
+                                <div id="venue-comparison"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Map container -->
+            <div class="col-md-9 p-0">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+    <!-- Add mobile toggle script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile sidebar toggle functionality
+            const mobileToggle = document.getElementById('mobile-toggle');
+            const controlsSidebar = document.getElementById('controls-sidebar');
+            const closeSidebar = document.getElementById('close-sidebar');
+            const mapElement = document.getElementById('map');
+            const sidebarOverlay = document.getElementById('sidebar-overlay');
+            
+            function toggleSidebar(show) {
+                if (show === undefined) {
+                    controlsSidebar.classList.toggle('active');
+                    sidebarOverlay.style.display = controlsSidebar.classList.contains('active') ? 'block' : 'none';
+                } else if (show) {
+                    controlsSidebar.classList.add('active');
+                    sidebarOverlay.style.display = 'block';
+                } else {
+                    controlsSidebar.classList.remove('active');
+                    sidebarOverlay.style.display = 'none';
+                }
+            }
+            
+            if (mobileToggle && controlsSidebar) {
+                mobileToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    toggleSidebar();
+                });
+            }
+            
+            if (closeSidebar && controlsSidebar) {
+                closeSidebar.addEventListener('click', function() {
+                    toggleSidebar(false);
+                });
+            }
+            
+            // Close sidebar when clicking on map
+            if (mapElement && controlsSidebar) {
+                mapElement.addEventListener('click', function() {
+                    if (window.innerWidth <= 768 && controlsSidebar.classList.contains('active')) {
+                        toggleSidebar(false);
+                    }
+                });
+            }
+            
+            // Close sidebar when clicking on overlay
+            if (sidebarOverlay && controlsSidebar) {
+                sidebarOverlay.addEventListener('click', function() {
+                    toggleSidebar(false);
+                });
+            }
+            
+            // Add CSS for toast notifications
+            const style = document.createElement('style');
+            style.textContent = `
+                .toast-notification {
+                    position: fixed;
+                    bottom: 24px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: rgba(50, 50, 50, 0.9);
+                    color: white;
+                    padding: 12px 20px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                    z-index: 2000;
+                    display: flex;
+                    align-items: center;
+                    min-width: 200px;
+                    max-width: 80%;
+                }
+                
+                .toast-icon {
+                    margin-right: 12px;
+                }
+                
+                .toast-success .toast-icon {
+                    color: #0F9D58;
+                }
+                
+                .toast-error .toast-icon {
+                    color: #DB4437;
+                }
+                
+                .toast-info .toast-icon {
+                    color: #4285F4;
+                }
+                
+                .toast-warning .toast-icon {
+                    color: #F4B400;
+                }
+                
+                @keyframes slide-in {
+                    from { transform: translate(-50%, 100%); opacity: 0; }
+                    to { transform: translate(-50%, 0); opacity: 1; }
+                }
+                
+                @keyframes slide-out {
+                    from { transform: translate(-50%, 0); opacity: 1; }
+                    to { transform: translate(-50%, 100%); opacity: 0; }
+                }
+                
+                .slide-in {
+                    animation: slide-in 0.3s ease forwards;
+                }
+                
+                .slide-out {
+                    animation: slide-out 0.3s ease forwards;
+                }
+            `;
+            document.head.appendChild(style);
+        });
+    </script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="routing.js"></script>
+    <script src="navigation.js"></script>
+    <script src="script.js"></script>
+    <script src="mobile.js"></script>
+    <script src="direction-indicators.js"></script>
+    <script src="participant-manager.js"></script>
+    <script src="venue-finder.js"></script>
+    <script src="venue-comparison.js"></script>
+    <script src="cost-estimator.js"></script>
+    <script src="enhanced-search.js"></script>
+    <script src="business-tourism-map.js"></script>
+    <script src="mobile-venue-finder.js"></script>
+    <script src="business-tourism.js" type="module"></script>
+    <script src="business-tourism-init.js" type="module"></script>
+    
+    <script>
+        // Initialize components when the DOM is fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize the participant manager
+            if (typeof initParticipantManager === 'function') {
+                initParticipantManager('participant-locations');
+            }
+            
+            // Initialize the venue finder with the map instance
+            if (typeof initVenueFinder === 'function' && window.map) {
+                initVenueFinder(window.map);
+            }
+            
+            // Initialize the venue comparison
+            if (typeof initVenueComparison === 'function') {
+                initVenueComparison('venue-comparison');
+            }
+            
+            // Initialize the cost estimator
+            if (typeof initCostEstimator === 'function') {
+                initCostEstimator();
+            }
+        });
+    </script>
+    <!-- Toast container for notifications -->
+    <div class="toast-container" id="toast-container"></div>
+    
+    <!-- Mobile bottom sheet for venue finder and navigation -->
+    <div class="mobile-bottom-sheet collapsed" id="mobile-bottom-sheet">
+        <div class="bottom-sheet-handle">
+            <div class="handle-indicator"></div>
+        </div>
+        <div class="bottom-sheet-header">
+            <h5 id="bottom-sheet-title">Find Meeting Venues</h5>
+            <button id="close-bottom-sheet" class="btn-close"></button>
+        </div>
+        <div class="bottom-sheet-body" id="bottom-sheet-body">
+            <!-- Content will be dynamically populated -->
+        </div>
+    </div>
+</body>
+</html>

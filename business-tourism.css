@@ -1,0 +1,262 @@
+/* Business Tourism Feature Styles */
+
+/* Business venue section in sidebar */
+.business-section {
+    padding: 15px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.business-section h5 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 15px;
+    color: var(--text-primary);
+}
+
+.business-section h5 i {
+    color: var(--primary-color);
+}
+
+/* Participant location inputs */
+.participant-location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.participant-location .form-control {
+    flex-grow: 1;
+}
+
+.participant-location .btn-remove {
+    background: none;
+    border: none;
+    color: var(--secondary-color);
+    cursor: pointer;
+    padding: 0;
+    font-size: 16px;
+}
+
+.add-participant-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: 1px dashed var(--border-color);
+    color: var(--primary-color);
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    width: 100%;
+    justify-content: center;
+    margin-bottom: 15px;
+    transition: background-color 0.2s;
+}
+
+.add-participant-btn:hover {
+    background-color: rgba(66, 133, 244, 0.05);
+}
+
+/* Venue list styling */
+.venue-list {
+    max-height: 300px;
+    overflow-y: auto;
+    margin-top: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.venue-list-item {
+    display: flex;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.venue-list-item:last-child {
+    border-bottom: none;
+}
+
+.venue-list-item:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+.venue-list-item.active {
+    background-color: rgba(66, 133, 244, 0.1);
+}
+
+.venue-list-content {
+    flex-grow: 1;
+}
+
+.venue-name {
+    font-size: 14px;
+    font-weight: 500;
+    margin: 0 0 4px 0;
+    color: var(--text-primary);
+}
+
+.venue-rating {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-bottom: 4px;
+}
+
+.venue-rating i.fas.fa-star,
+.venue-rating i.fas.fa-star-half-alt {
+    color: var(--yellow-color);
+    font-size: 12px;
+}
+
+.venue-rating i.far.fa-star {
+    color: #ccc;
+    font-size: 12px;
+}
+
+.rating-value {
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.venue-amenities {
+    color: var(--text-secondary);
+    margin: 0;
+    font-size: 12px;
+}
+
+.travel-info {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.venue-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    justify-content: center;
+}
+
+/* Venue popup styling */
+.venue-popup {
+    font-family: var(--font-family);
+    padding: 5px;
+}
+
+.venue-popup h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 8px 0;
+}
+
+.venue-description {
+    font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 10px;
+}
+
+.venue-details {
+    font-size: 13px;
+    margin-bottom: 10px;
+}
+
+.venue-details p {
+    margin: 4px 0;
+}
+
+.price-symbol {
+    color: var(--text-primary);
+}
+
+.price-symbol.muted {
+    color: #ccc;
+}
+
+/* Venue comparison styling */
+.venue-comparison {
+    margin-top: 15px;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 8px;
+    border: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.comparison-table th {
+    background-color: rgba(0, 0, 0, 0.02);
+    font-weight: 500;
+}
+
+.amenities-list {
+    padding-left: 20px;
+    margin: 0;
+    font-size: 12px;
+}
+
+/* Business venue marker */
+.business-venue-marker {
+    background: none;
+    border: none;
+}
+
+.venue-marker-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: var(--primary-color);
+    color: white;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.venue-marker-icon i {
+    transform: rotate(45deg);
+    font-size: 18px;
+}
+
+/* Meeting preferences section */
+.meeting-preferences {
+    margin-top: 15px;
+    padding: 12px;
+    background-color: rgba(0, 0, 0, 0.02);
+    border-radius: 8px;
+}
+
+.meeting-preferences h6 {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .venue-list {
+        max-height: 200px;
+    }
+    
+    .venue-name {
+        font-size: 13px;
+    }
+    
+    .venue-actions button {
+        padding: 2px 5px;
+        font-size: 11px;
+    }
+}

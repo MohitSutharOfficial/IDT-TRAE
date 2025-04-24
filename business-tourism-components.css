@@ -1,0 +1,490 @@
+/**
+ * Modern Business Tourism Components Styling
+ * Provides styling for venue finder, venue comparison, and cost estimator components
+ */
+
+/* Business Section Container */
+.business-section {
+    background-color: var(--background-card);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+/* Venue Cards */
+.venue-card {
+    background-color: var(--background-card);
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    margin-bottom: 16px;
+    padding: 16px;
+    transition: all var(--transition-speed) ease;
+    border: 1px solid var(--border-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.venue-card:hover {
+    box-shadow: 0 4px 12px var(--shadow-color);
+    transform: translateY(-2px);
+}
+
+.venue-card.selected {
+    border: 2px solid var(--primary-color);
+    background-color: var(--primary-light);
+}
+
+.venue-card.selected::before {
+    content: '✓';
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 32px;
+    height: 32px;
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-size: 16px;
+    box-shadow: 0 2px 4px var(--shadow-color);
+    transform: rotate(10deg);
+}
+
+.venue-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.venue-name {
+    margin: 0;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 16px;
+}
+
+.venue-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.venue-rating {
+    color: var(--warning-color);
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+}
+
+.venue-rating i {
+    margin-right: 4px;
+}
+
+.venue-price {
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.venue-card-body {
+    margin-bottom: 14px;
+}
+
+.venue-distance {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+}
+
+.venue-distance i {
+    color: var(--primary-color);
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+.venue-amenities {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.venue-amenity {
+    background-color: var(--background-light);
+    padding: 4px 8px;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.venue-amenity i {
+    margin-right: 4px;
+    font-size: 12px;
+    color: var(--primary-color);
+}
+
+.venue-card-footer {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.venue-card-btn {
+    flex: 1;
+    padding: 8px 12px;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all var(--transition-speed) ease;
+}
+
+.venue-card-btn.primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+.venue-card-btn.primary:hover {
+    background-color: #1565C0;
+}
+
+.venue-card-btn.secondary {
+    background-color: var(--background-light);
+    color: var(--text-primary);
+}
+
+.venue-card-btn.secondary:hover {
+    background-color: var(--border-color);
+}
+
+.venue-card-btn i {
+    margin-right: 6px;
+    font-size: 14px;
+}
+
+/* Venue Comparison */
+.comparison-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.comparison-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.comparison-table th,
+.comparison-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.comparison-table th {
+    font-weight: 500;
+    color: var(--text-primary);
+    background-color: var(--background-light);
+}
+
+.comparison-table .section-header {
+    font-weight: 600;
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 12px;
+    padding: 12px;
+}
+
+.comparison-table .criteria-name {
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.comparison-table .total-row {
+    background-color: var(--background-light);
+    font-weight: 600;
+}
+
+.comparison-table .winner-cell {
+    background-color: rgba(46, 125, 50, 0.1);
+    color: var(--success-color);
+    font-weight: 600;
+}
+
+.amenities-list {
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+}
+
+.amenities-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.amenities-list li:before {
+    content: '✓';
+    position: absolute;
+    left: 0;
+    color: var(--success-color);
+    font-weight: bold;
+}
+
+/* Cost Estimator */
+.cost-estimate-container {
+    padding: 16px;
+    background-color: var(--background-light);
+    border-radius: var(--border-radius);
+    margin-top: 16px;
+}
+
+.cost-estimate-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+    background-color: var(--background-card);
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 1px 4px var(--shadow-color);
+}
+
+.cost-estimate-table th,
+.cost-estimate-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+}
+
+.cost-estimate-table th {
+    font-weight: 500;
+    color: var(--text-primary);
+    background-color: var(--background-light);
+}
+
+.cost-estimate-table .total-row {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
+    font-weight: 600;
+}
+
+.cost-notes {
+    background-color: var(--background-light);
+    padding: 12px 16px;
+    border-radius: var(--border-radius);
+    font-size: 13px;
+    color: var(--text-secondary);
+    border-left: 4px solid var(--primary-color);
+}
+
+/* Participant Management */
+.participant-location {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+    gap: 8px;
+}
+
+.participant-input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 14px;
+    transition: all var(--transition-speed) ease;
+}
+
+.participant-input:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.2);
+    outline: none;
+}
+
+.btn-remove {
+    background: none;
+    border: none;
+    color: var(--danger-color);
+    cursor: pointer;
+    padding: 6px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color var(--transition-speed) ease;
+}
+
+.btn-remove:hover {
+    background-color: rgba(211, 47, 47, 0.1);
+}
+
+.btn-remove:disabled {
+    color: var(--border-color);
+    cursor: not-allowed;
+}
+
+.add-participant-btn {
+    background-color: var(--background-light);
+    color: var(--primary-color);
+    border: 1px dashed var(--primary-color);
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-top: 8px;
+    transition: all var(--transition-speed) ease;
+}
+
+.add-participant-btn:hover {
+    background-color: var(--primary-light);
+}
+
+.add-participant-btn i {
+    margin-right: 8px;
+}
+
+/* Meeting Preferences */
+.meeting-preferences {
+    background-color: var(--background-light);
+    border-radius: var(--border-radius);
+    padding: 16px;
+    margin: 16px 0;
+}
+
+.meeting-preferences h6 {
+    margin-top: 0;
+    margin-bottom: 16px;
+    color: var(--primary-color);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+}
+
+.meeting-preferences h6:before {
+    content: '⚙️';
+    margin-right: 8px;
+    font-size: 16px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 767.98px) {
+    .business-section {
+        padding: 12px;
+        margin-bottom: 1rem;
+    }
+    
+    .venue-card {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .venue-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .venue-meta {
+        margin-top: 8px;
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .venue-card-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .comparison-table {
+        font-size: 0.8rem;
+        overflow-x: auto;
+        display: block;
+        white-space: nowrap;
+    }
+    
+    .comparison-table th,
+    .comparison-table td {
+        padding: 8px;
+    }
+    
+    .participant-location {
+        flex-wrap: wrap;
+    }
+    
+    .participant-input {
+        flex: 1 0 100%;
+        margin-bottom: 8px;
+    }
+    
+    .btn-remove {
+        margin-left: auto;
+    }
+    
+    .cost-estimate-table {
+        overflow-x: auto;
+        display: block;
+    }
+    
+    /* Improved mobile bottom sheet for business features */
+    .mobile-bottom-sheet .business-controls-container {
+        padding: 16px;
+    }
+    
+    .mobile-bottom-sheet .venue-card {
+        margin-bottom: 12px;
+        box-shadow: 0 1px 4px var(--shadow-color);
+    }
+    
+    /* Floating action button for finding venues on mobile */
+    .floating-action-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        background-color: var(--primary-color);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        transition: all 0.3s ease;
+    }
+    
+    .floating-action-btn:hover,
+    .floating-action-btn:active {
+        background-color: #1565C0;
+        transform: scale(1.05);
+    }
+    
+    .floating-action-btn i {
+        font-size: 24px;
+    }
+}
