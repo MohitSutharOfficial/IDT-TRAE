@@ -41,13 +41,14 @@ body {
 .search-container {
     position: absolute;
     top: 16px;
-    left: 16px;
+    left: 50%;
+    transform: translateX(-50%);
     width: calc(100% - 32px);
     max-width: 450px;
     z-index: 1000;
     border-radius: var(--border-radius);
+    background-color: var(--background-card);
     box-shadow: 0 4px 16px var(--shadow-color);
-    background: var(--background-card);
     transition: all var(--transition-speed) ease;
 }
 
@@ -70,6 +71,17 @@ body {
     color: var(--text-tertiary);
     margin-right: 12px;
     font-size: 18px;
+    transition: all 0.3s ease;
+}
+
+.search-icon .fa-spinner {
+    color: var(--secondary-color);
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 .search-input {
@@ -116,6 +128,35 @@ body {
     display: none;
     border: 1px solid var(--border-color);
     border-top: none;
+}
+
+.autocomplete-header {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: var(--text-secondary);
+    background-color: var(--primary-light);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.autocomplete-footer {
+    padding: 8px 12px;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.clear-history-btn {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 13px;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.clear-history-btn:hover {
+    background-color: var(--primary-light);
+    color: var(--primary-color);
 }
 
 .search-autocomplete.active {
@@ -422,5 +463,58 @@ h6 {
     .controls-panel {
         border-radius: 0;
         box-shadow: none;
+    }
+}
+
+/* Floating map layers control panel */
+.map-layers-control.floating-panel {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(32,33,36,0.18);
+    padding: 10px 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.map-layer-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: none;
+    border: none;
+    outline: none;
+    font-family: 'Roboto', Arial, sans-serif;
+    font-size: 15px;
+    color: #202124;
+    padding: 8px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.map-layer-btn .fas {
+    font-size: 18px;
+}
+
+.map-layer-btn.active, .map-layer-btn:hover {
+    background: #e3f0fd;
+    color: #1a73e8;
+}
+
+@media (max-width: 600px) {
+    .map-layers-control.floating-panel {
+        top: 12px;
+        right: 12px;
+        padding: 6px 4px;
+        gap: 6px;
+    }
+    .map-layer-btn {
+        font-size: 13px;
+        padding: 6px 10px;
     }
 }

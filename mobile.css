@@ -23,6 +23,7 @@
         transform: translateX(-50%);
         width: calc(100% - 120px);
         z-index: 1002;
+        background-color: var(--background-card);
     }
     
     .search-box {
@@ -32,6 +33,8 @@
     .search-autocomplete {
         max-height: 50vh;
         overflow-y: auto;
+        background-color: var(--background-card);
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
     }
 }
 

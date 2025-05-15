@@ -128,7 +128,17 @@ async function startNavigation(destination) {
         return true;
     } catch (error) {
         console.error('Error starting navigation:', error);
-        alert('Could not start navigation. Please try again.');
+        // Show a more user-friendly error message and reset navigation state
+        alert('Could not start navigation. Please check your internet connection, ensure both start and destination points are valid, and try again.');
+        navigationState.isNavigating = false;
+        navigationState.currentRoute = null;
+        navigationState.currentStep = 0;
+        navigationState.remainingDistance = 0;
+        navigationState.remainingTime = 0;
+        navigationState.startTime = null;
+        navigationState.destinationReached = false;
+        navigationState.lastPosition = null;
+        updateNavigationUI(false);
         return false;
     }
 }
@@ -729,58 +739,59 @@ function showDirectionsPanel(routeData) {
                 const mobileStartNavBtn = document.getElementById('mobile-start-navigation');
                 if (mobileStartNavBtn) {
                     mobileStartNavBtn.addEventListener('click', function() {
-                        // Update UI to show navigation mode
-                        updateNavigationUI(true);
-                        
-                        // Update the bottom sheet with live navigation info
-                        bottomSheetBody.innerHTML = `
-                            <div class="live-navigation-container">
-                                <div id="current-instruction" class="current-instruction">
-                                    <div class="instruction-icon">${getDirectionIcon(routeData.steps[0])}</div>
-                                    <div class="instruction-text">${routeData.steps[0].instruction}</div>
-                                </div>
-                                <div class="navigation-info">
-                                    <div class="info-item">
-                                        <i class="fas fa-map-marker-alt"></i>
-                                        <span id="remaining-distance">${routeData.distance.toFixed(1)} km</span>
-                                    </div>
-                                    <div class="info-item">
-                                        <i class="fas fa-clock"></i>
-                                        <span id="eta">${new Date(Date.now() + routeData.duration * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
-                                    </div>
-                                </div>
-                                <div class="navigation-controls">
-                                    <button id="mobile-voice-toggle" class="btn btn-outline-primary">
-                                        <i class="fas fa-volume-up"></i> Voice
-                                    </button>
-                                    <button id="mobile-stop-navigation" class="btn btn-outline-danger">
-                                        <i class="fas fa-stop-circle"></i> Stop
-                                    </button>
-                                </div>
-                            </div>
-                        `;
-                        
-                        // Add event listeners to the new buttons
-                        document.getElementById('mobile-voice-toggle').addEventListener('click', toggleVoiceGuidance);
-                        document.getElementById('mobile-stop-navigation').addEventListener('click', stopNavigation);
+                        startNavigationFromRoute();
                     });
                 }
-            }
-            
-            // Update the mobile route info if it exists
-            const mobileRouteInfo = document.getElementById('mobile-route-info');
-            if (mobileRouteInfo) {
-                mobileRouteInfo.innerHTML = `
-                    <div class="d-flex justify-content-between mb-2">
-                        <div><i class="fas fa-road"></i> ${routeData.distance.toFixed(1)} km</div>
-                        <div><i class="fas fa-clock"></i> ${routeData.duration} min</div>
+                // Update UI to show navigation mode
+                updateNavigationUI(true);
+                
+                // Update the bottom sheet with live navigation info
+                bottomSheetBody.innerHTML = `
+                    <div class="live-navigation-container">
+                        <div id="current-instruction" class="current-instruction">
+                            <div class="instruction-icon">${getDirectionIcon(routeData.steps[0])}</div>
+                            <div class="instruction-text">${routeData.steps[0].instruction}</div>
+                        </div>
+                        <div class="navigation-info">
+                            <div class="info-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span id="remaining-distance">${routeData.distance.toFixed(1)} km</span>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-clock"></i>
+                                <span id="eta">${new Date(Date.now() + routeData.duration * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+                            </div>
+                        </div>
+                        <div class="navigation-controls">
+                            <button id="mobile-voice-toggle" class="btn btn-outline-primary">
+                                <i class="fas fa-volume-up"></i> Voice
+                            </button>
+                            <button id="mobile-stop-navigation" class="btn btn-outline-danger">
+                                <i class="fas fa-stop-circle"></i> Stop
+                            </button>
+                        </div>
                     </div>
-                    <div class="text-muted small">${routeData.steps[0].instruction}</div>
                 `;
+                
+                // Add event listeners to the new buttons
+                document.getElementById('mobile-voice-toggle').addEventListener('click', toggleVoiceGuidance);
+                document.getElementById('mobile-stop-navigation').addEventListener('click', stopNavigation);
             }
-            
-            return; // Exit early as we're using the bottom sheet instead
         }
+        
+        // Update the mobile route info if it exists
+        const mobileRouteInfo = document.getElementById('mobile-route-info');
+        if (mobileRouteInfo) {
+            mobileRouteInfo.innerHTML = `
+                <div class="d-flex justify-content-between mb-2">
+                    <div><i class="fas fa-road"></i> ${routeData.distance.toFixed(1)} km</div>
+                    <div><i class="fas fa-clock"></i> ${routeData.duration} min</div>
+                </div>
+                <div class="text-muted small">${routeData.steps[0].instruction}</div>
+            `;
+        }
+        
+        return; // Exit early as we're using the bottom sheet instead
     }
     
     // For desktop, create the directions panel if it doesn't exist
@@ -958,7 +969,7 @@ function updateDirectionsPanel() {
             
             const etaElement = document.getElementById('eta');
             if (etaElement) {
-                etaElement.textContent = new Date(Date.now() + navigationState.remainingTime * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                etaElement.textContent = new Date(Date.now() + navigationState.remainingTime * 60000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
             }
             
             return; // Exit early as we've updated the mobile view

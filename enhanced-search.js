@@ -7,6 +7,9 @@
 let searchHistory = [];
 let recentLocations = [];
 
+// Maximum number of items to store in history
+const MAX_HISTORY_ITEMS = 10;
+
 // Initialize the enhanced search functionality
 document.addEventListener('DOMContentLoaded', function() {
     initEnhancedSearch();
@@ -27,6 +30,16 @@ function initEnhancedSearch() {
         return;
     }
     
+    // Load search history from local storage if available
+    try {
+        const savedHistory = localStorage.getItem('findMyMapSearchHistory');
+        if (savedHistory) {
+            searchHistory = JSON.parse(savedHistory);
+        }
+    } catch (e) {
+        console.warn('Could not load search history from local storage', e);
+    }
+    
     // Clear search input
     searchClear.addEventListener('click', function() {
         searchInput.value = '';
@@ -40,8 +53,20 @@ function initEnhancedSearch() {
         const query = searchInput.value.trim();
         
         if (query.length < 2) {
-            searchAutocomplete.classList.remove('active');
-            searchContainer.classList.remove('has-results');
+            // Show recent searches instead if available
+            if (searchHistory.length > 0) {
+                const recentSearches = searchHistory.map(item => ({
+                    text: item.query,
+                    type: 'recent',
+                    data: item.result
+                }));
+                renderAutocompleteResults(recentSearches, searchAutocomplete, true);
+                searchAutocomplete.classList.add('active');
+                searchContainer.classList.add('has-results');
+            } else {
+                searchAutocomplete.classList.remove('active');
+                searchContainer.classList.remove('has-results');
+            }
             return;
         }
         
@@ -56,6 +81,20 @@ function initEnhancedSearch() {
                 searchContainer.classList.remove('has-results');
             }
         });
+    });
+    
+    // Show recent searches when input is focused with empty value
+    searchInput.addEventListener('focus', function() {
+        if (searchInput.value.trim() === '' && searchHistory.length > 0) {
+            const recentSearches = searchHistory.map(item => ({
+                text: item.query,
+                type: 'recent',
+                data: item.result
+            }));
+            renderAutocompleteResults(recentSearches, searchAutocomplete, true);
+            searchAutocomplete.classList.add('active');
+            searchContainer.classList.add('has-results');
+        }
     });
     
     // Handle keyboard navigation in autocomplete
@@ -149,7 +188,7 @@ async function getSearchSuggestions(query) {
 }
 
 /**
- * Ptructure wayerform search with the given query
+ * Perform search with the given query
  * @param {string} query - The search query
  * @param {Object} locationData - Optional location data if already available
  */
@@ -158,6 +197,9 @@ function performSearch(query, locationData = null) {
     if (searchIcon) {
         searchIcon.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
     }
+    
+    // Clear previous search results from the map
+    clearSearchResults();
     
     // If we already have location data from autocomplete, use it directly
     if (locationData && locationData.lat && locationData.lon) {
@@ -169,7 +211,7 @@ function performSearch(query, locationData = null) {
         return;
     }
     
-    // Otherwise, perform geocoding
+    // Otherwise, perform geocoding with error handling
     fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=1`)
         .then(response => {
             if (!response.ok) {
@@ -185,6 +227,8 @@ function performSearch(query, locationData = null) {
             
             if (data.length > 0) {
                 handleSearchResult(data[0]);
+                // Add to search history
+                addToSearchHistory(query, data[0]);
             } else {
                 // Show error message
                 showToast('Location not found. Please try a different search term.', 'error');
@@ -198,6 +242,52 @@ function performSearch(query, locationData = null) {
                 searchIcon.innerHTML = '<i class="fas fa-search"></i>';
             }
             
+            // Show error message to user
+            showToast('Search failed. Please check your connection and try again.', 'error');
+        }
+
+/**
+ * Clear previous search results from the map
+ */
+function clearSearchResults() {
+    // Find and remove any existing search result markers
+    const existingMarkers = document.querySelectorAll('.search-result-marker');
+    existingMarkers.forEach(marker => {
+        if (marker._leaflet_id) {
+            map.removeLayer(marker);
+        }
+    });
+}
+
+/**
+ * Add search query and result to search history
+ * @param {string} query - The search query
+ * @param {Object} result - The search result data
+ */
+function addToSearchHistory(query, result) {
+    // Create history item
+    const historyItem = {
+        query: query,
+        result: result,
+        timestamp: new Date().getTime()
+    };
+    
+    // Add to beginning of array
+    searchHistory.unshift(historyItem);
+    
+    // Limit history size
+    if (searchHistory.length > MAX_HISTORY_ITEMS) {
+        searchHistory = searchHistory.slice(0, MAX_HISTORY_ITEMS);
+    }
+    
+    // Save to local storage if available
+    try {
+        localStorage.setItem('findMyMapSearchHistory', JSON.stringify(searchHistory));
+    } catch (e) {
+        console.warn('Could not save search history to local storage', e);
+    }
+}
+            
             // Show error message
             showToast('An error occurred while searching. Please try again.', 'error');
         });
@@ -207,10 +297,19 @@ function performSearch(query, locationData = null) {
  * Render autocomplete results in the dropdown
  * @param {Array} suggestions - The search suggestions
  * @param {HTMLElement} container - The container to render results in
+ * @param {boolean} isRecent - Whether these are recent searches
  */
-function renderAutocompleteResults(suggestions, container) {
+function renderAutocompleteResults(suggestions, container, isRecent = false) {
     // Clear previous results
     container.innerHTML = '';
+    
+    // Add header if showing recent searches
+    if (isRecent) {
+        const header = document.createElement('div');
+        header.className = 'autocomplete-header';
+        header.innerHTML = '<i class="fas fa-history"></i> Recent Searches';
+        container.appendChild(header);
+    }
     
     if (suggestions.length === 0) {
         const noResults = document.createElement('div');
@@ -232,6 +331,7 @@ function renderAutocompleteResults(suggestions, container) {
         if (suggestion.type === 'food' || suggestion.type === 'restaurant') icon = 'fa-utensils';
         if (suggestion.type === 'building' || suggestion.type === 'office') icon = 'fa-building';
         if (suggestion.type === 'amenity') icon = 'fa-store';
+        if (suggestion.type === 'recent') icon = 'fa-history';
         
         // Format the display text to be more readable
         const displayText = formatDisplayName(suggestion.text);
@@ -262,6 +362,23 @@ function renderAutocompleteResults(suggestions, container) {
         
         container.appendChild(item);
     });
+    
+    // Add clear history button if showing recent searches
+    if (isRecent && suggestions.length > 0) {
+        const clearButton = document.createElement('div');
+        clearButton.className = 'autocomplete-footer';
+        clearButton.innerHTML = '<button class="clear-history-btn"><i class="fas fa-trash-alt"></i> Clear History</button>';
+        
+        clearButton.querySelector('.clear-history-btn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            searchHistory = [];
+            localStorage.removeItem('findMyMapSearchHistory');
+            container.classList.remove('active');
+            document.getElementById('search-container').classList.remove('has-results');
+        });
+        
+        container.appendChild(clearButton);
+    }
 }
 
 /**

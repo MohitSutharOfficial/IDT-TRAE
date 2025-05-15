@@ -1,5 +1,5 @@
 // Initialize the map centered on a default location
-let map = L.map('map').setView([51.505, -0.09], 13);
+let map = L.map('map').setView([23.0225, 72.5714], 13); // Ahmedabad coordinates
 
 // Define different map tile layers (similar to Google Maps layers)
 const mapLayers = {
@@ -27,31 +27,23 @@ mapLayers.standard.addTo(map);
 // Create map layer control buttons
 function createMapLayerControls() {
     const controlDiv = document.createElement('div');
-    controlDiv.className = 'map-layers-control';
-    
+    controlDiv.className = 'map-layers-control floating-panel';
     const layers = [
-        { id: 'standard', name: 'Map', layer: mapLayers.standard },
-        { id: 'satellite', name: 'Satellite', layer: mapLayers.satellite },
-        { id: 'terrain', name: 'Terrain', layer: mapLayers.terrain },
-        { id: 'transit', name: 'Transit', layer: mapLayers.transit }
+        { id: 'standard', name: 'Map', icon: 'fa-map', layer: mapLayers.standard },
+        { id: 'satellite', name: 'Satellite', icon: 'fa-satellite', layer: mapLayers.satellite },
+        { id: 'terrain', name: 'Terrain', icon: 'fa-mountain', layer: mapLayers.terrain },
+        { id: 'transit', name: 'Transit', icon: 'fa-subway', layer: mapLayers.transit }
     ];
-    
     layers.forEach(item => {
         const button = document.createElement('button');
         button.className = 'map-layer-btn';
         button.id = `layer-${item.id}`;
-        button.textContent = item.name;
+        button.innerHTML = `<i class='fas ${item.icon}'></i> ${item.name}`;
         button.onclick = () => switchMapLayer(item.id);
-        
-        // Set active class for the default layer
-        if (item.id === 'standard') {
-            button.classList.add('active');
-        }
-        
+        if (item.id === 'standard') button.classList.add('active');
         controlDiv.appendChild(button);
     });
-    
-    document.body.appendChild(controlDiv);
+    document.getElementById('map').appendChild(controlDiv);
 }
 
 // Function to switch between map layers
