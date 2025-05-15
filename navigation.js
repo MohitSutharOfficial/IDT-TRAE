@@ -117,6 +117,29 @@ async function startNavigation(destination) {
         // Start tracking user's position
         startPositionTracking();
         
+        // Listen for geolocation errors and handle gracefully
+        if (navigator.geolocation) {
+            if (navigationState.watchId) {
+                navigator.geolocation.clearWatch(navigationState.watchId);
+            }
+            navigationState.watchId = navigator.geolocation.watchPosition(
+                function(position) {
+                    const currentPos = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    navigationState.lastPosition = currentPos;
+                    // Optionally, recalculate route if user is off-route
+                    // Optionally, update UI with current position
+                },
+                function(error) {
+                    alert('Location tracking error: ' + error.message);
+                    navigationState.isNavigating = false;
+                    updateNavigationUI(false);
+                },
+                { enableHighAccuracy: true, maximumAge: 10000, timeout: 20000 }
+            );
+        }
         // Announce first instruction
         if (navigationState.voiceEnabled) {
             announceInstruction(routeData.steps[0]);

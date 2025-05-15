@@ -457,54 +457,10 @@ function initPullToRefresh() {
  * Fix mobile toggle functionality
  * This function ensures the mobile menu toggle works correctly
  */
-function fixMobileToggle() {
-    const mobileToggle = document.getElementById('mobile-toggle');
-    const controlsSidebar = document.getElementById('controls-sidebar');
-    const closeSidebar = document.getElementById('close-sidebar');
-    const sidebarOverlay = document.getElementById('sidebar-overlay');
-    
-    if (!mobileToggle || !controlsSidebar) return;
-    
-    // Remove any existing event listeners to prevent conflicts
-    const newMobileToggle = mobileToggle.cloneNode(true);
-    mobileToggle.parentNode.replaceChild(newMobileToggle, mobileToggle);
-    
-    // Add event listener to the mobile toggle button
-    newMobileToggle.addEventListener('click', function(e) {
-        e.stopPropagation();
-        e.preventDefault();
-        
-        // Toggle the sidebar
-        controlsSidebar.classList.toggle('active');
-        
-        // Show/hide the overlay
-        if (sidebarOverlay) {
-            sidebarOverlay.style.display = controlsSidebar.classList.contains('active') ? 'block' : 'none';
-        }
-        
-        // Add haptic feedback if available
-        if ('vibrate' in navigator) {
-            navigator.vibrate(20);
-        }
-    });
-    
-    // Make sure the close button works
-    if (closeSidebar) {
-        closeSidebar.addEventListener('click', function() {
-            controlsSidebar.classList.remove('active');
-            if (sidebarOverlay) {
-                sidebarOverlay.style.display = 'none';
-            }
-        });
-    }
-    
-    // Close sidebar when clicking on overlay
-    if (sidebarOverlay) {
-        sidebarOverlay.addEventListener('click', function() {
-            controlsSidebar.classList.remove('active');
-            sidebarOverlay.style.display = 'none';
-        });
-    }
+function initMobileUI() {
+    // Ensure mobile toggle and sidebar work reliably
+    fixMobileToggle();
+    // Add any additional mobile UI initializations here
 }
 
 /**
