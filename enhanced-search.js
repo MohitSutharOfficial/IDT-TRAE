@@ -244,7 +244,8 @@ function performSearch(query, locationData = null) {
             
             // Show error message to user
             showToast('Search failed. Please check your connection and try again.', 'error');
-        }
+        });
+}
 
 /**
  * Clear previous search results from the map
@@ -287,12 +288,6 @@ function addToSearchHistory(query, result) {
         console.warn('Could not save search history to local storage', e);
     }
 }
-            
-            // Show error message
-            showToast('An error occurred while searching. Please try again.', 'error');
-        });
-}
-
 /**
  * Render autocomplete results in the dropdown
  * @param {Array} suggestions - The search suggestions
